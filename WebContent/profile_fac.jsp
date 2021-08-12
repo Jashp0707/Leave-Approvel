@@ -4,7 +4,7 @@
 	if(session.getAttribute("role") != null){
 		userRole = (String)session.getAttribute("role");
 	}
-	if(userRole.equals("Faculty")){
+	if(userRole.equals("Faculty") || userRole.equals("HOD")){
 %>
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -46,16 +46,26 @@
 			<ul
 				class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
 				<li><a href="faculty_index.jsp"
-					class="nav-link px-2 text-secondary">Home</a></li>
+					class="nav-link px-2 text-white">Home</a></li>
 				<li><a href="approve.jsp" class="nav-link px-2 text-white">Approve
 						Leave</a></li>
 				<li><a href="leaveReport.jsp" class="nav-link px-2 text-white">Leave
 						Report</a></li>
+						<%
+						if(userRole.equals("Faculty")){%>
+							 <li><a href="addLeave.jsp" class="nav-link px-2 text-white">Add Leave</a></li>
+						<%}
+						%>
 				<li><a href="profile_fac.jsp" class="nav-link px-2 text-white">Profile</a></li>
 
 
 			</ul>
 			<div class="text-end">
+			<div class="text-end">
+        <p>Welcome <%
+        
+		String user=(String)session.getAttribute("username");
+        %><b><%=user %></b></p>
 
 				<button type="button" class="btn btn-warning">
 					<a href="index.jsp" class="text-decoration-none"
@@ -64,82 +74,128 @@
 			</div>
 		</div>
 	</div></header>
-	<div class="container-sm constainer-md  text-center">
-    <form action="" class="row g-3">
-        <div class="col-md-4">
-          <label for="inputEmail4" class="form-label">First Name</label>
-          <input type="text" class="form-control" name="first" id="inputEmail4">
-        </div>
-        <div class="col-md-4">
-          <label for="inputPassword4" class="form-label">Last Name</label>
-          <input type="text" class="form-control" name="last" id="inputPassword4">
-        </div>
-        <div class="col-md-4">
-            <label for="inputEmail4" class="form-label">Email</label>
-            <input type="email" class="form-control" name="email" id="inputEmail4">
-          </div>
-          <div class="col-md-4">
-            <label for="inputPassword4" class="form-label">Password</label>
-            <input type="password" class="form-control" name="password" id="inputPassword4">
-          </div>
-          
-          <div class="col-md-4">
-            <label for="inputPassword4" class="form-label">Enrollment Number</label>
-            <input type="int" class="form-control" name="user_id" id="inputPassword4">
-          </div>
-          <div class="col-md-4">
-            <label for="inputPassword4" class="form-label">Specialization</label>
-            <input type="text" class="form-control" name="special" id="inputPassword4">
-          </div>
-        <div class="col-6">
-          <label for="inputAddress" class="form-label">Address</label>
-          <input type="text" class="form-control" id="inputAddress" name="address1" placeholder="1234 Main St">
-        </div>
-        <div class="col-6">
-          <label for="inputAddress2" class="form-label">Address 2</label>
-          <input type="text" class="form-control" id="inputAddress2" name="address2" placeholder="Apartment, studio, or floor">
-        </div>
-        <div class="col-md-4">
-          <label for="inputCity" class="form-label">City</label>
-          <input type="text" class="form-control" name="city" id="inputCity">
-        </div>
-        <div class="col-md-4">
-          <label for="inputState" class="form-label">State</label>
-          <select id="inputState" class="form-select" name="state">
-            <option selected>Choose...</option>
-            <option>Gujarat</option>
-            <option>Rajashthan</option>
-            <option>Delhi</option>
-            <option>Maharashtra</option>
-            <option>Karnatak</option>
-            <option>Haryana</option>
-            <option>Punjab</option>
-          </select>
-        </div>
-        <div class="col-md-4">
-          <label for="inputZip" class="form-label">Post</label>
-          <input type="text" class="form-control" id="inputZip" name="post">
-        </div>
-        
-        <div class="col-12">
-          <button type="submit" class="btn btn-primary">Change Details</button>
-        </div>
-      </form>
-  </div>
+	<%
+		String email_id = (String) session.getAttribute("adminUsername");
+			String id = (String) session.getAttribute("id");
+			String first_name = "";
+			String last_name = "";
+			String password="";
+			String specialization="";
+			String address1="";
+			String address2="";
+			String city="";
+			String state="";
+			String details="";
+			
+			Class.forName("com.mysql.jdbc.Driver");
+
+			java.sql.Connection con1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/leave", "root",
+					"root");
+
+			Statement stmt = con1.createStatement();
+			String sql1 = "select * from login where userid="+id+"";
+			ResultSet rs = stmt.executeQuery(sql1);
+			if (rs.next()) {
+				
+				first_name = rs.getString("first_name");
+				last_name = rs.getString("last_name");
+				password = rs.getString("password");
+				specialization=rs.getString("specialization");
+				address1=rs.getString("address_line1");
+				address2=rs.getString("address_line2");
+				city=rs.getString("city");
+				state=rs.getString("state");
+			}
+	%>
   
-  <%
-  String first=request.getParameter("first");
-	String last=request.getParameter("last");
-	String email_id=request.getParameter("email");
-	String password=request.getParameter("password");
-	String user_id=request.getParameter("user_id");
-	String special=request.getParameter("special");
-	String address1=request.getParameter("address1");
-	String address2=request.getParameter("address2");
-	String city=request.getParameter("city");
-	String state=request.getParameter("state");
-	String post=request.getParameter("post");
-	if(user_id!=null){
+  
+  
+<div class="container-sm constainer-md  text-center">
+		<form action="" class="row g-3">
+			<div class="col-md-4">
+				<label for="inputEmail4" class="form-label">First Name</label> <input
+					type="text" class="form-control" name="first" id="inputEmail4"
+					placeholder="<%out.println(first_name);%>" disabled>
+			</div>
+			<div class="col-md-4">
+				<label for="inputPassword4" class="form-label">Last Name</label> <input
+					type="text" class="form-control" name="last" id="inputPassword4"
+					placeholder="<%out.println(last_name);%>" disabled>
+			</div>
+			<div class="col-md-4">
+				<label for="inputEmail4" class="form-label">Email</label> <input
+					type="email" class="form-control" name="email" id="inputEmail4"
+					placeholder="<%out.println(email_id);%>" disabled>
+			</div>
+			<div class="col-md-4">
+				<label for="inputPassword4" class="form-label">Password</label> <input
+					type="password" class="form-control" name="password"
+					id="inputPassword4" value="<%out.println(password);%>">
+			</div>
+
+			<div class="col-md-4">
+				<label for="inputPassword4" class="form-label">Enrollment
+					Number</label> <input type="int" class="form-control" name="user_id"
+					id="inputPassword4" value="<%out.println(id);%>" disabled>
+			</div>
+			<div class="col-md-4">
+				<label for="inputPassword4" class="form-label">Specialization</label>
+				<input type="text" class="form-control" name="special"
+					id="inputPassword4" value="<%out.println(specialization);%>">
+			</div>
+			<div class="col-6">
+				<label for="inputAddress" class="form-label">Address</label> <input
+					type="text" class="form-control" id="inputAddress" name="address1"
+					value="<%out.println(address1);%>">
+			</div>
+			<div class="col-6">
+				<label for="inputAddress2" class="form-label">Address 2</label> <input
+					type="text" class="form-control" id="inputAddress2" name="address2"
+					value="<%out.println(address2);%>">
+			</div>
+			<div class="col-md-4">
+				<label for="inputCity" class="form-label">City</label> <input
+					type="text" class="form-control" name="city" id="inputCity"
+					value="<%out.println(city);%>">
+			</div>
+			<div class="col-md-4">
+				<label for="inputState" class="form-label">State</label> <select
+					id="inputState" class="form-select" name="state"
+					value="<%out.println(state);%>">
+					<option selected>Choose...</option>
+					<option>Gujarat</option>
+					<option>Rajashthan</option>
+					<option>Delhi</option>
+					<option>Maharashtra</option>
+					<option>Karnatak</option>
+					<option>Haryana</option>
+					<option>Punjab</option>
+				</select>
+			</div>
+			<div class="col-md-4">
+				<label for="inputZip" class="form-label">Post</label> <input
+					type="text" class="form-control" id="inputZip" name="post"
+					value="<%out.println(userRole);%>" disabled>
+			</div>
+
+			<div class="col-12">
+				<button type="submit" name="studentUpdateSubmit" class="btn btn-primary">Change
+					Details</button>
+			</div>
+		</form>
+	</div>
+
+	<%
+	password = request.getParameter("password");
+	specialization = request.getParameter("special");
+	address1 = request.getParameter("address1");
+	address2 = request.getParameter("address2");
+	city = request.getParameter("city");
+	state = request.getParameter("state");
+	
+
+			
+			if (request.getParameter("studentUpdateSubmit")!=null) {
 		try
 		{
 			
@@ -148,12 +204,25 @@
 				java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/leave", "root", "root");
 				
 				Statement st= con.createStatement();
-// 				String sql1="delete from hod_details where userid='"+user_id+"'";
-				String sql="update hod_details set first_name='"+first+"',last_name='"+last+"',email_id='"+email_id+"',password='"+password+"',specialization='"+special+"',address_line1='"+address1+"',address_line2='"+address2+"',city='"+city+"',state='"+state+"',details='"+post+"' where userid='"+user_id+"'";
-// 				int i=st.executeUpdate(sql1);
+				String sql="update login set password='"+password+"',specialization='"+specialization+"',address_line1='"+address1+"',address_line2='"+address2+"',city='"+city+"',state='"+state+"' where userid='"+id+"'";
+
 				int j=st.executeUpdate(sql);
-// 			System.out.println(i);
-			System.out.println(j);
+				if(session.getAttribute("role").equals("Faculty")){
+					out.println("<meta http-equiv='refresh' content='0.1;URL=faculty_index.jsp'>");//redirects after 3 seconds
+					   
+					
+					
+					out.println("<script>alert('Your profile update successfully!!!');</script>");	
+				}
+				else{
+					out.println("<meta http-equiv='refresh' content='0.1;URL=HOD_index.jsp'>");//redirects after 3 seconds
+					   
+					
+					
+					out.println("<script>alert('Your profile update successfully!!!');</script>");	
+				}
+				
+					
 		
 		}
 		catch(Exception e)
@@ -161,7 +230,10 @@
 		System.out.print(e);
 		e.printStackTrace();
 		}
-		response.sendRedirect("faculty_index.jsp");
+		if(session.getAttribute("role").equals("Faculty")){
+			userRole = (String)session.getAttribute("role");
+		}
+		
 	}
   %>
 </body>
@@ -169,7 +241,10 @@
 <%
 	}
 	else{
+out.println("<meta http-equiv='refresh' content='0.1;URL=login.jsp'>");//redirects after 3 seconds
+		   
+		
+		
 		out.println("<script>alert('SESSION INVALID!!! PLEASE LOGIN AGAIN!!!!!');</script>");
-		response.sendRedirect("login.jsp");
 	}
 %>

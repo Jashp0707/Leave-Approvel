@@ -5,7 +5,7 @@
 	if (session.getAttribute("role") != null) {
 		userRole = (String) session.getAttribute("role");
 	}
-	if (userRole.equals("Student")) {
+	if (userRole.equals("Student") || userRole.equals("Faculty")) {
 %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
@@ -45,11 +45,27 @@
 		<div
 			class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
 
+<%
+						if(userRole.equals("Faculty")){%>
+							 <ul
+				class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+				<li><a href="faculty_index.jsp"
+					class="nav-link px-2 text-secondary">Home</a></li>
+				<li><a href="approve.jsp" class="nav-link px-2 text-white">Approve
+						Leave</a></li>
+				<li><a href="leaveReport.jsp" class="nav-link px-2 text-white">Leave
+						Report</a></li>
+						<li><a href="addLeave.jsp" class="nav-link px-2 text-white">Add Leave</a></li>
+				<li><a href="profile_fac.jsp" class="nav-link px-2 text-white">Profile</a></li>
 
+
+			</ul>
+						<%}else{
+						%>
 			<ul
 				class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
 				<li><a href="student_index.jsp"
-					class="nav-link px-2 text-secondary">Home</a></li>
+					class="nav-link px-2 text-white">Home</a></li>
 				<li><a href="addLeave.jsp" class="nav-link px-2 text-white">Add
 						Leave</a></li>
 				<li><a href="leaveHistory.jsp" class="nav-link px-2 text-white">Leave
@@ -57,9 +73,14 @@
 				<li><a href="profile_stu.jsp" class="nav-link px-2 text-white">Profile</a></li>
 
 
-			</ul>
+			</ul><%} %>
 
 			<div class="text-end">
+			<div class="text-end">
+        <p>Welcome <%
+        
+		String user=(String)session.getAttribute("username");
+        %><b><%=user %></b></p>
 
 				<button type="button" class="btn btn-warning">
 					<a href="index.jsp" class="text-decoration-none"
@@ -85,7 +106,7 @@
 					"root");
 
 			Statement stmt = con1.createStatement();
-			String sql1 = "select * from hod_details where userid=" + id + "";
+			String sql1 = "select * from login where userid=" + id + "";
 			ResultSet rs = stmt.executeQuery(sql1);
 			if (rs.next()) {
 				first_name = rs.getString("first_name");
@@ -157,7 +178,11 @@
 				}
 				// 	out.println("<script>alert('Wrong username or password')</script>");
 
-				response.sendRedirect("addLeave.jsp");
+out.println("<meta http-equiv='refresh' content='0.1;URL=addLeave.jsp'>");//redirects after 3 seconds
+				   
+				
+				
+				out.println("<script>alert('Your request submitted!!!');</script>");	
 			}
 	%>
 
@@ -165,7 +190,10 @@
 </html>
 <%
 	} else {
+out.println("<meta http-equiv='refresh' content='0.1;URL=login.jsp'>");//redirects after 3 seconds
+		   
+		
+		
 		out.println("<script>alert('SESSION INVALID!!! PLEASE LOGIN AGAIN!!!!!');</script>");
-		response.sendRedirect("login.jsp");
 	}
 %>

@@ -22,33 +22,6 @@
 	integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
 	crossorigin="anonymous">
 </head>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-$(document).ready(function() {
-	$(".forgot").click(function() {
-		var id2 = document.getElementById("email").value;
-		/* $("#getOTP").prop('disabled', true);
-		alert("OTP sent!!!"); */
-		console.log("inside");
-		
-		$.ajax({
-			url : "forgotPassword.jsp",
-			type : "post",
-			data : {
-				id : id2,
-			},
-			success : function(data) {
-				alert("Your password is sent. Please check your registered email.")
-			},
-			error : function(data) {
-				alert("Your email is not registered.")
-			}
-		});
-		
-	});
-});
-        </script>
 <body>
 	<header class="p-3 bg-dark text-white"
 		style="background-color:rgb(77, 74, 74)!important;">
@@ -68,24 +41,13 @@ $(document).ready(function() {
 
 			<ul
 				class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-				<li><a href="index.jsp" class="nav-link px-2 text-white">Home</a></li>
+				<li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
 				<li><a href="#" class="nav-link px-2 text-white">Academics</a></li>
 				<li><a href="#" class="nav-link px-2 text-white">About Us</a></li>
 				<li><a href="#" class="nav-link px-2 text-white" aria-disabled="true">Contact Us</a></li>
 
 
 			</ul>
-			<div class="text-end">
-        
-        
-           
-        
-          
-            <button type="button" class="btn btn-warning" formaction="signup.jsp"><a href="signup.jsp" class="text-decoration-none" style="color: white;">Sign-up</a></button>
-
-        
-          
-        </div>
 
 
 
@@ -93,7 +55,6 @@ $(document).ready(function() {
 		</div>
 	</div>
 	</header>
-	
 
 
 	<!--   main -->
@@ -101,33 +62,28 @@ $(document).ready(function() {
 	<div
 		class="container-sm constainer-md position-absolute top-50 start-50 translate-middle text-center">
 		<form action="login.jsp">
-		<!-- <form action="forgotPassword.jsp" id="forgot"> -->
+<br>
 			<div class="row mb-3 mx-auto w-50">
 				<label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
 				<div class="col-sm-10">
 					<input type="email" class="form-control" name="email"
-						id="email" required>
+						id="inputEmail3">
 				</div>
 			</div>
-			<!-- </form> -->
 			<div class="row mb-3 mx-auto w-50">
 				<label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
 				<div class="col-sm-10">
 					<input type="password" class="form-control" name="password"
-						id="inputPassword3" required>
+						id="inputPassword3">
 				</div>
 			</div>
-			
-			<div >
-							<input type="radio" id="javascript" name="post" value="Student" checked="checked">
-								<label for="javascript" style="margin: 2%; ">Student</label>
-								<input type="radio" id="html" name="post" value="Faculty">
-								<label for="html" style="margin: 2%; ">Faculty</label>
-								<input type="radio" id="html" name="post" value="HOD">
-								<label for="html" style="margin: 2%; ">HOD</label>
-								
-							</div>
-							<button type="button" class="forgot" style="border-color:white;background: white;-webkit-appearance: media-slider; margin-bottom:2%;">Forgot Password?</button>
+			<div class="row mb-3 mx-auto w-50">
+				<label class="col-sm-2 col-form-label">Post</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" name="post"
+						id="inputEmail3">
+				</div>
+			</div>
 
 			<div class="container mx-auto w-50 text-center ">
 
@@ -138,7 +94,9 @@ $(document).ready(function() {
 			
 		</form>
 	</div>
-	
+	<div>
+		<img src="" alt="">
+	</div>
 
 	<%
 		String details = request.getParameter("post");
@@ -161,10 +119,10 @@ $(document).ready(function() {
 		// 		}
 		if (details != null && email_id != null && password != null) {
 			Statement st = con.createStatement();
-			String sql = "select * from login where email_id='" + email_id + "' and password='"
+			String sql = "select * from leave.hod_details where email_id='" + email_id + "' and password='"
 					+ password + "' and details='" + details + "'";
 			ResultSet rs = st.executeQuery(sql);
-			
+			System.out.println(details + email_id + password);
 			if (rs.next()) {
 				if (rs.getString("details").equals("Student")) {
 					String id=rs.getString("userid");
@@ -172,31 +130,49 @@ $(document).ready(function() {
 					session.setAttribute("adminUsername" ,Uname);
 					session.setAttribute("id" ,id);
 					session.setAttribute("role" ,"Student");
-					session.setAttribute("username",rs.getString("first_name"));
 					response.sendRedirect("student_index.jsp");
-					
-					
-				} else  {
+				} else {
 					String id=rs.getString("userid");
 					String Uname=request.getParameter("email");
 					session.setAttribute("adminUsername" ,Uname);
 					session.setAttribute("id" ,id);
-					session.setAttribute("role" ,rs.getString("details"));
-					session.setAttribute("username",rs.getString("first_name"));
+					session.setAttribute("role" ,"Faculty");
 					response.sendRedirect("faculty_index.jsp");
 				}
-				
 
 			} else {
-				out.println("<meta http-equiv='refresh' content='0.1;URL=login.jsp'>");//redirects after 3 seconds
-				   
-				
+				out.println("<h1></h1>");
 				out.println("<script>alert('Wrong username or password');</script>");
-				
+				System.out.println("wrong password");
+				response.sendRedirect("login.jsp");
 			}
 		}
 
-		
+		// 		where email_id='"+email_id+"' and password='"+password+"' and details='"+details+"'
+		// 		String sql="select * from hod_details where email_id=? and password=? and details=?";
+		// 		PreparedStatement ps = con.prepareStatement(sql);
+		// 		ps.setString(1,email_id);
+		// 		ps.setString(2,password);
+		// 		ps.setString(3,details);
+
+		// 		ResultSet rs=ps.executeQuery();
+		// 		rs.last();
+		// 		int size = rs.getRow();
+		// 		System.out.println(size);
+
+		// 		try{
+		// 			if (rs.next()){
+
+		// 			if((rs.getString("password").equals(password))&&(rs.getString("email_id").equals(email_id))){
+
+		// 			}
+		// 			else{
+		// 				response.sendRedirect("login.html");
+		// 			}
+		// 		}
+		// 		catch (Exception e) {
+		// 			e.printStackTrace();
+		// 			}
 	%>
 
 

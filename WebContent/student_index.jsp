@@ -44,7 +44,7 @@
         
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="student_index.jsp" class="nav-link px-2 text-secondary">Home</a></li>
+          <li><a href="student_index.jsp" class="nav-link px-2 text-white">Home</a></li>
           <li><a href="addLeave.jsp" class="nav-link px-2 text-white">Add Leave</a></li>
           <li><a href="leaveHistory.jsp" class="nav-link px-2 text-white">Leave History</a></li>
           <li><a href="profile_stu.jsp" class="nav-link px-2 text-white">Profile</a></li>
@@ -53,6 +53,10 @@
         </ul>
 
         <div class="text-end">
+        <p>Welcome <%
+        
+		String user=(String)session.getAttribute("username");
+        %><b><%=user %></b></p>
             
             <button type="button" class="btn btn-warning"><a href="index.jsp" class="text-decoration-none" style="color: white;">Log Out</a></button>
           </div>
@@ -126,7 +130,10 @@
 <%
 	}
 	else{
+out.println("<meta http-equiv='refresh' content='0.1;URL=login.jsp'>");//redirects after 3 seconds
+		   
+		
+		
 		out.println("<script>alert('SESSION INVALID!!! PLEASE LOGIN AGAIN!!!!!');</script>");
-		response.sendRedirect("login.jsp");
 	}
 %>

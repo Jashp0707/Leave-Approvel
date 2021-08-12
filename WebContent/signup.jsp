@@ -13,43 +13,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Sign Up</title>
 </head>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-	
-	$(document).ready(function() {
-		$(".otp").click(function() {
-			var id2 = document.getElementById("inputZip").value;
-			$("#getOTP").prop('disabled', true);
-			alert("OTP sent!!!");
-			
-			$.ajax({
-				url : "sendOtp.jsp",
-				type : "post",
-				data : {
-					id : id2,
-				},
-				
-			});
-		});
-	});
-	$(document).ready(function(){
-		$("#inputZip").keyup(function(){
-			var num = this.value;
-			var phoneno = /^\d{10}$/;
-			if(num.match(phoneno)){
-				$("#getOTP").prop('disabled', false);
-				console.log("Matched");
-			}
-			else{
-				$("#getOTP").prop('disabled', true);
-				console.log("Not Matched");
-			}
-		})
-	})
-	
-</script>
-
 <body>
  <!-- navbar   -->
 
@@ -67,24 +30,13 @@
         
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="index.jsp" class="nav-link px-2 text-white">Home</a></li>
+          <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
           <li><a href="#" class="nav-link px-2 text-white">Academics</a></li>
           <li><a href="#" class="nav-link px-2 text-white">About Us</a></li>
           <li><a href="#" class="nav-link px-2 text-white">Contact Us</a></li>
           
           
         </ul>
-        <div class="text-end">
-        
-        
-            <button type="button" class="btn btn-outline-light me-2 " formaction="login.jsp"><a href="login.jsp" class="text-decoration-none" style="color: white;">Login</a></button>
-        
-          
-            
-
-        
-          
-        </div>
 
         
 
@@ -108,7 +60,7 @@
             <input type="email" class="form-control" name="email" id="inputEmail4">
           </div>
           <div class="col-md-4">
-            <label for="inputPassword4" class="form-label">Password</label>
+            <label for="inputPassword4" class="form-label" style="color: white;">Password</label>
             <input type="password" class="form-control" name="password" id="inputPassword4">
           </div>
           
@@ -146,18 +98,10 @@
           </select>
         </div>
         <div class="col-md-4">
-          <label for="inputZip1" class="form-label">Post</label>
-          <input type="text" class="form-control" id="inputZip1" name="post">
+          <label for="inputZip" class="form-label">Post</label>
+          <input type="text" class="form-control" id="inputZip" name="post">
         </div>
-        <div class="col-md-4">
-        <label for="inputZip" class="form-label">Contact No.</label>
-        <input type="text" class="form-control"  id="inputZip" name="mobile">
-      </div>
-        <div class="col-md-4">
-          <label for="inputZip" class="form-label">OTP</label>
-          <input type="text" class="form-control" id="inputZip2" name="otp">
-          <button type="button" class="otp btn btn-primary" id="getOTP" disabled>Get OTP</button>
-        </div>
+        
         <div class="col-12">
           <button type="submit" class="btn btn-primary">Sign Up</button>
         </div>
@@ -176,8 +120,6 @@
 	String city=request.getParameter("city");
 	String state=request.getParameter("state");
 	String post=request.getParameter("post");
-	String mobile=request.getParameter("mobile");
-	String otp=request.getParameter("otp");
 	if(user_id!=null){
 	try
 	{
@@ -187,39 +129,21 @@
 			java.sql.Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/leave", "root", "root");
 			
 			Statement st= con.createStatement();
-			String sql1="select * from verify where mobile='"+mobile+"' and otp='"+otp+"'";
-			ResultSet rs=st.executeQuery(sql1);
-			if(rs.next()){
-				String sql="insert into login values('"+user_id+"','"+first+"','"+last+"','"+email_id+"','"+password+"','"+special+"','"+address1+"','"+address2+"','"+city+"','"+state+"','"+post+"','"+mobile+"')";
-				
-				
-				
-				String sql2="delete from verify where mobile='"+mobile+"'";
-				int j = st.executeUpdate(sql2);
-				if(!st.execute(sql)){
-					out.println("<meta http-equiv='refresh' content='0.1;URL=login.jsp'>");
-					   
-					
-					out.println("<script>alert('Your account created successfully!!!');</script>");
-				}
-							
+			String sql="insert into hod_details values('"+user_id+"','"+first+"','"+last+"','"+email_id+"','"+password+"','"+special+"','"+address1+"','"+address2+"','"+city+"','"+state+"','"+post+"')";
+			int i=st.executeUpdate(sql);
 		
-			}
+	
 	}
 	catch(Exception e)
 	{
 	System.out.print(e);
-	out.println("<meta http-equiv='refresh' content='0.1;URL=login.jsp'>");
-	   
-	
-	out.println("<script>alert('Your account is already created successfully!!!');</script>");
 	e.printStackTrace();
 	}
-	
+	out.println("<script>alert('Wrong username or password')</script>");
 	
 
 
-	}
+	response.sendRedirect("login.jsp");}
 
 %>
 </body>
