@@ -4,7 +4,7 @@
 	if(session.getAttribute("role") != null){
 		userRole = (String)session.getAttribute("role");
 	}
-	if(userRole.equals("Faculty")){
+	if(userRole.equals("Faculty") || userRole.equals("HOD")){
 %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
@@ -45,16 +45,26 @@
 			<ul
 				class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
 				<li><a href="faculty_index.jsp"
-					class="nav-link px-2 text-secondary">Home</a></li>
+					class="nav-link px-2 text-white">Home</a></li>
 				<li><a href="approve.jsp" class="nav-link px-2 text-white">Approve
 						Leave</a></li>
 				<li><a href="leaveReport.jsp" class="nav-link px-2 text-white">Leave
 						Report</a></li>
+						<%
+						if(userRole.equals("Faculty")){%>
+							 <li><a href="addLeave.jsp" class="nav-link px-2 text-white">Add Leave</a></li>
+						<%}
+						%>
 				<li><a href="profile_fac.jsp" class="nav-link px-2 text-white">Profile</a></li>
 
 
 			</ul>
 			<div class="text-end">
+			<div class="text-end">
+        <p>Welcome <%
+        
+		String user=(String)session.getAttribute("username");
+        %><b><%=user %></b></p>
 
 				<button type="button" class="btn btn-warning">
 					<a href="index.jsp" class="text-decoration-none"
@@ -167,7 +177,10 @@
 <%
 	}
 	else{
+out.println("<meta http-equiv='refresh' content='0.1;URL=login.jsp'>");//redirects after 3 seconds
+		   
+		
+		
 		out.println("<script>alert('SESSION INVALID!!! PLEASE LOGIN AGAIN!!!!!');</script>");
-		response.sendRedirect("login.jsp");
 	}
 %>
